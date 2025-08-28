@@ -1,268 +1,585 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Calculadora de Precificação • Caixa Secreta</title>
-<style>
-  :root{
-    --black:#1C1C1C;
-    --pink:#DB1472;
-    --gold:#F8B81F;
-    --gray:#F2F2F2;
-    --white:#FFFFFF;
-    --green:#2ECC71;
-  }
-  *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif}
-  body{
-    margin:0;
-    background: linear-gradient(135deg, #F2F2F2 0%, #FFFFFF 60%);
-    color:#1C1C1C;
-  }
-  header{
-    background: radial-gradient(1200px 300px at 20% -10%, rgba(248,184,31,0.25), transparent),
-                radial-gradient(800px 200px at 90% -20%, rgba(219,20,114,0.18), transparent),
-                #1C1C1C;
-    color:white;
-    padding:28px 20px;
-    text-align:center;
-  }
-  header h1{
-    margin:0 0 6px 0;
-    font-size: clamp(20px, 4vw, 32px);
-    letter-spacing:0.3px;
-  }
-  header p{margin:0;font-size:14px;opacity:.9}
-  .container{
-    max-width:1000px;margin:24px auto;padding:0 16px;
-  }
-  .card{background:white;border-radius:16px;box-shadow:0 12px 24px rgba(0,0,0,0.08);
-        padding:18px;margin-bottom:16px;border:1px solid #eee;}
-  .grid{display:grid;grid-template-columns:1fr;gap:16px}
-  @media(min-width:900px){ .grid{ grid-template-columns: 1.1fr 1fr; } }
-  h2{margin:4px 0 10px 0;font-size:18px;color:var(--pink)}
-  label{display:block;font-size:14px;margin:10px 0 6px 0;color:#333}
-  input[type="number"]{
-    width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:16px;
-    background:#fff;
-  }
-  .muted{color:#666;font-size:13px}
-  .row{display:flex;gap:10px;flex-wrap:wrap}
-  .row > *{flex:1}
-  .btn{
-    appearance:none;border:none;border-radius:999px;padding:10px 14px;cursor:pointer;
-    background:var(--pink);color:white;font-weight:700;box-shadow:0 6px 14px rgba(219,20,114,.25);
-  }
-  .btn.secondary{background:#eee;color:#222;box-shadow:none}
-  .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-  .chip{background:var(--gray);color:#222;border-radius:999px;padding:8px 12px;cursor:pointer;border:1px solid #e0e0e0}
-  .chip.primary{background:var(--gold);border-color:#deb347}
-  .results{display:grid;grid-template-columns:1fr;gap:12px;margin-top:6px}
-  @media(min-width:700px){ .results{ grid-template-columns:repeat(2,1fr);} }
-  .kpi{
-    border-radius:14px;padding:16px;border:1px solid #eee;background:#fff;
-    box-shadow: 0 8px 16px rgba(0,0,0,.06);
-  }
-  .kpi h3{margin:0 0 6px 0;font-size:14px;color:#444}
-  .price{
-    font-size: clamp(24px, 4.6vw, 34px);font-weight:800;margin:2px 0;
-  }
-  .price.green{color:var(--green)}
-  .price.gold{color:#9c7a00}
-  .price.pink{color:var(--pink)}
-  .hint{font-size:12px;color:#777}
-  footer{margin:24px auto 40px auto;text-align:center;color:#777;font-size:12px}
-  .badge{display:inline-block;background:var(--pink);color:#fff;border-radius:999px;padding:5px 10px;font-size:12px;margin-left:6px}
-  .section-title{display:flex;align-items:center;gap:8px}
-  .round{
-    display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px dashed #ccc;border-radius:12px;padding:10px 12px;font-size:14px
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Precificação • Caixa Secreta</title>
+    <!-- DESIGNER UI/UX: Adicionando a fonte Poppins do Google Fonts, conforme solicitado -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* * DESIGNER UI/UX: Definição das variáveis de cores e estilos globais.
+         * Foco em performance usando fontes do sistema e reset básico.
+        */
+        :root {
+            /* Paleta de Cores - Altere aqui para customizar */
+            --preto: #1C1C1C;
+            --rosa-pink: #DB1472;
+            --amarelo-ouro: #F8B81F;
+            --cinza-claro: #F2F2F2;
+            --branco: #FFFFFF;
+            --verde-lucro: #2ECC71;
+            --sombra-suave: rgba(0, 0, 0, 0.08);
+
+            /* Tipografia - Altere aqui para customizar */
+            --fonte-principal: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--fonte-principal);
+            background: linear-gradient(180deg, var(--cinza-claro) 0%, var(--branco) 100%);
+            color: var(--preto);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* * LÍDER FRONTEND: Estrutura principal e layout responsivo (mobile-first).
+         * O layout principal é um grid que se adapta para telas maiores.
+        */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        /* Media query para telas maiores (desktop) */
+        @media (min-width: 992px) {
+            .main-grid {
+                grid-template-columns: 1fr 380px; /* Calculadora | Bloco Informativo */
+            }
+        }
+
+        /* Estilos do Cabeçalho */
+        .main-header {
+            background-color: var(--preto);
+            color: var(--branco);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--rosa-pink);
+        }
+
+        .main-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .main-header h1 span {
+            color: var(--amarelo-ouro);
+        }
+
+        .main-header p {
+            font-size: 0.9rem;
+            color: var(--cinza-claro);
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        /* Estilo genérico de Card */
+        .card {
+            background-color: var(--branco);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px var(--sombra-suave);
+            border: 1px solid #eee;
+        }
+
+        /* Estilos da Calculadora */
+        .calculator-section h2, .info-section h2 {
+            font-size: 1.25rem;
+            color: var(--rosa-pink);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper .currency-symbol {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-weight: 500;
+        }
+
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 12px 12px 12px 38px; /* Espaço para o "R$" */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: var(--fonte-principal);
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        /* QA/TESTER: Garante que o estado de foco seja visível para acessibilidade */
+        .form-group input[type="number"]:focus {
+            outline: none;
+            border-color: var(--rosa-pink);
+            box-shadow: 0 0 0 3px rgba(219, 20, 114, 0.2);
+        }
+
+        /* Chips de Margem */
+        .margin-chips, .shortcut-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .chip, .shortcut-btn {
+            padding: 8px 12px;
+            border-radius: 20px;
+            background-color: var(--cinza-claro);
+            border: 1px solid #ddd;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: background-color 0.2s, color 0.2s, transform 0.1s;
+            font-family: var(--fonte-principal);
+        }
+
+        .chip:hover {
+            background-color: var(--amarelo-ouro);
+            color: var(--preto);
+        }
+        
+        .chip:active {
+            transform: scale(0.95);
+        }
+
+        /* Atalhos Rápidos */
+        .shortcut-btn {
+            background-color: var(--preto);
+            color: var(--branco);
+            border: none;
+        }
+
+        .shortcut-btn:hover {
+            background-color: var(--rosa-pink);
+        }
+
+        /* Card de Resultados */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .result-item {
+            padding: 16px;
+            border-radius: 8px;
+            background-color: var(--cinza-claro);
+            text-align: center;
+        }
+
+        .result-item h3 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .result-item .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        /* DESIGNER UI/UX: Alteração do destaque para verde, conforme solicitado */
+        .result-item.highlight {
+            background-color: var(--verde-lucro);
+            grid-column: 1 / -1; /* Ocupa a linha toda */
+            color: var(--branco);
+        }
+        
+        .result-item.highlight h3 {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .result-item.highlight .value {
+            font-size: 2.5rem;
+            color: var(--branco);
+        }
+        
+        /* Destaque para lucro */
+        .result-item .value.profit {
+            color: var(--verde-lucro);
+        }
+
+        /* Bloco Informativo "Caixa Secreta" */
+        .info-section {
+            position: sticky;
+            top: 20px;
+        }
+
+        .info-toggle-btn {
+            display: none; /* Escondido por padrão, aparece em mobile */
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: var(--preto);
+            color: var(--branco);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            margin-bottom: 16px;
+        }
+        
+        .info-content {
+            display: block; /* Visível por padrão em desktop */
+        }
+
+        @media (max-width: 991.98px) {
+            .info-toggle-btn {
+                display: block; /* Mostra o botão em mobile */
+            }
+            .info-content {
+                display: none; /* Esconde o conteúdo por padrão em mobile */
+                overflow: hidden;
+                transition: max-height 0.3s ease-in-out;
+                max-height: 0;
+            }
+            .info-content.open {
+                display: block;
+                max-height: 1000px; /* Altura suficiente para o conteúdo */
+            }
+        }
+
+        .info-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-content li {
+            margin-bottom: 12px;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .info-content li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .info-content .highlight-text {
+            background-color: var(--amarelo-ouro);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .info-content .disclaimer {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 16px;
+            border-left: 3px solid var(--amarelo-ouro);
+            padding-left: 12px;
+        }
+
+        /* Rodapé */
+        .main-footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+            font-size: 0.85rem;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Calculadora de Precificação • <span style="color:#F8B81F">Caixa Secreta</span></h1>
-    <p>Ferramenta simples para você definir preço de venda e lucro. (Uso exclusivo de quem adquiriu a Caixa Secreta)</p>
-  </header>
 
-  <div class="container">
-    <div class="grid">
-      <div class="card">
-        <div class="section-title">
-          <h2>1) Informe seu custo por par</h2>
-          <span class="badge">ex.: R$28,00</span>
+    <header class="main-header">
+        <div class="container">
+            <h1>Calculadora de Precificação • <span>Caixa Secreta</span></h1>
+            <!-- TECH WRITER: Microcopy do cabeçalho -->
+            <p>Ferramenta simples para definir preço de venda e lucro por par/caixa.</p>
         </div>
-        <div class="row">
-          <div>
-            <label>Custo por par (R$)</label>
-            <input id="custo" type="number" min="0" step="0.01" value="28">
-          </div>
-          <div>
-            <label>Custos extras por par (frete, taxas) – opcional (R$)</label>
-            <input id="extras" type="number" min="0" step="0.01" value="0">
-          </div>
-        </div>
-        <p class="muted">Dica: deixe <b>extras</b> em 0 se preferir um cálculo mais direto.</p>
-      </div>
+    </header>
 
-      <div class="card">
-        <h2>2) Escolha a margem desejada</h2>
-        <div class="chips">
-          <span class="chip" data-margin="60">+60%</span>
-          <span class="chip" data-margin="80">+80%</span>
-          <span class="chip primary" data-margin="100">+100%</span>
-          <span class="chip" data-margin="120">+120%</span>
-          <span class="chip" data-margin="150">+150%</span>
-          <span class="chip" data-margin="180">+180%</span>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <div>
-            <label>Ou digite outra margem (%)</label>
-            <input id="margem" type="number" min="0" step="1" value="150">
-          </div>
-          <div>
-            <label>Arredondamento psicológico</label>
-            <div class="row">
-              <button class="btn secondary" type="button" id="roundNone">Sem arredondar</button>
-              <button class="btn" type="button" id="round90">Terminar em ,90</button>
-              <button class="btn secondary" type="button" id="round99">Terminar em ,99</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <main class="container">
+        <div class="main-grid">
+            
+            <!-- Coluna da Calculadora -->
+            <section class="calculator-section">
+                <div class="card">
+                    <h2>Simule sua Precificação</h2>
+                    <form id="pricing-form">
+                        <div class="form-group">
+                            <label for="cost-per-pair">Custo por par</label>
+                            <div class="input-wrapper">
+                                <span class="currency-symbol">R$</span>
+                                <input type="number" id="cost-per-pair" value="28.00" step="0.01" min="0">
+                            </div>
+                        </div>
 
-    <div class="card">
-      <div class="section-title">
-        <h2>Resultados</h2>
-        <span class="round">Base: custo + margem escolhida</span>
-      </div>
-      <div class="results">
-        <div class="kpi">
-          <h3>Preço sugerido de venda</h3>
-          <div class="price green" id="precoVenda">R$ 0,00</div>
-          <div class="hint" id="precoSemArredondar">Sem arredondamento: –</div>
-        </div>
-        <div class="kpi">
-          <h3>Lucro por par</h3>
-          <div class="price pink" id="lucroPar">R$ 0,00</div>
-          <div class="hint" id="margemReal">Margem real: –</div>
-        </div>
-        <div class="kpi">
-          <h3>Faturamento por caixa (10 pares)</h3>
-          <div class="price gold" id="faturamentoCaixa">R$ 0,00</div>
-          <div class="hint">Considerando todos os pares vendidos ao preço sugerido.</div>
-        </div>
-        <div class="kpi">
-          <h3>Lucro por caixa (10 pares)</h3>
-          <div class="price" id="lucroCaixa" style="color:#1C1C1C">R$ 0,00</div>
-          <div class="hint" id="custoCaixa">Custo total por caixa: –</div>
-        </div>
-      </div>
-    </div>
+                        <div class="form-group">
+                            <label for="extra-costs">Custos extras por par (opcional)</label>
+                            <div class="input-wrapper">
+                                <span class="currency-symbol">R$</span>
+                                <input type="number" id="extra-costs" value="0.00" step="0.01" min="0">
+                            </div>
+                        </div>
 
-    <div class="card">
-      <h2>Atalhos rápidos</h2>
-      <p class="muted">Clique para preencher automaticamente o preço de venda com base em R$28 de custo.</p>
-      <div class="chips">
-        <span class="chip" data-quick="59.90">R$59,90</span>
-        <span class="chip" data-quick="69.90">R$69,90</span>
-        <span class="chip" data-quick="79.90">R$79,90</span>
-      </div>
-    </div>
+                        <div class="form-group">
+                            <label for="margin-percentage">Margem de Lucro (%)</label>
+                            <div class="input-wrapper">
+                                <span class="currency-symbol" style="padding-left: 2px;">%</span>
+                                <input type="number" id="margin-percentage" value="150" step="1" min="0" style="padding-left: 30px;">
+                            </div>
+                            <!-- TECH WRITER: Chips com valores comuns para agilizar o preenchimento -->
+                            <div class="margin-chips">
+                                <button type="button" class="chip" data-margin="60">+60%</button>
+                                <button type="button" class="chip" data-margin="80">+80%</button>
+                                <button type="button" class="chip" data-margin="100">+100%</button>
+                                <button type="button" class="chip" data-margin="120">+120%</button>
+                                <button type="button" class="chip" data-margin="150">+150%</button>
+                                <button type="button" class="chip" data-margin="180">+180%</button>
+                            </div>
+                        </div>
+                        
+                        <!-- LÍDER FRONTEND: Seção de arredondamento removida conforme solicitado -->
 
-    <footer>
-      © Caixa Secreta — Calculadora simples de precificação. Este material é um brinde exclusivo<b></b>.
+                    </form>
+                </div>
+
+                <div class="card" style="margin-top: 24px;">
+                    <h2>Resultados</h2>
+                     <div class="form-group">
+                        <label>Atalhos Rápidos (simular preço final)</label>
+                        <div class="shortcut-buttons">
+                            <button type="button" class="shortcut-btn" data-price="59.90">Vender por R$ 59,90</button>
+                            <button type="button" class="shortcut-btn" data-price="69.90">Vender por R$ 69,90</button>
+                            <button type="button" class="shortcut-btn" data-price="79.90">Vender por R$ 79,90</button>
+                        </div>
+                    </div>
+                    <div class="results-grid">
+                        <div class="result-item highlight">
+                            <h3>Preço Sugerido de Venda</h3>
+                            <p id="suggested-price" class="value">R$ 0,00</p>
+                        </div>
+                        <div class="result-item">
+                            <h3>Lucro por Par</h3>
+                            <p id="profit-per-pair" class="value profit">R$ 0,00</p>
+                        </div>
+                        <div class="result-item">
+                            <h3>Margem Real</h3>
+                            <p id="real-margin" class="value profit">0,00%</p>
+                        </div>
+                        <div class="result-item">
+                            <h3>Faturamento / Caixa (10)</h3>
+                            <p id="box-revenue" class="value">R$ 0,00</p>
+                        </div>
+                        <div class="result-item">
+                            <h3>Lucro / Caixa (10)</h3>
+                            <p id="box-profit" class="value profit">R$ 0,00</p>
+                        </div>
+                    </div>
+                    <!-- LÍDER FRONTEND: Linha de preço sem arredondar removida por ser redundante agora -->
+                </div>
+            </section>
+
+            <!-- Coluna do Bloco Informativo -->
+            <aside class="info-section">
+                <!-- TECH WRITER: Título do botão para mobile -->
+                <button id="info-toggle-btn" type="button">ℹ️ Sobre a Caixa Secreta</button>
+                <div id="info-content" class="info-content">
+                    <div class="card">
+                        <h2>O que é a Caixa Secreta?</h2>
+                        <!-- TECH WRITER: Conteúdo informativo formatado -->
+                        <p>Uma caixa fechada com <strong>10 pares sortidos</strong> de rasteirinhas de modelos atuais, com preço único de <span class="highlight-text">R$ 280,00</span> (apenas R$ 28,00 por par).</p>
+                        <br>
+                        <ul>
+                            <li><strong>Curadoria:</strong> Cores e numerações estratégicas para venda. Não é ponta de estoque!</li>
+                            <li><strong>Potencial:</strong> Revenda cada par por até R$ 79,90 e maximize seu lucro.</li>
+                            <li><strong>Exemplo:</strong> Invista R$ 280, fature até R$ 799 e tenha um lucro de até <strong>R$ 519</strong>.</li>
+                        </ul>
+                        <p class="disclaimer">
+                            <strong>Atenção:</strong> Os modelos do catálogo são os que podem vir na sua caixa. As caixas são sortidas e não contêm todos os modelos de uma vez.
+                        </p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <!-- TECH WRITER: Texto do rodapé atualizado conforme solicitado -->
+        <p>© Caixa Secreta — Brinde de precificação. Este material é um brinde exclusivo.</p>
     </footer>
-  </div>
 
-<script>
-  const custoEl = document.getElementById('custo');
-  const extrasEl = document.getElementById('extras');
-  const margemEl = document.getElementById('margem');
-  const precoVendaEl = document.getElementById('precoVenda');
-  const precoSemArredondarEl = document.getElementById('precoSemArredondar');
-  const lucroParEl = document.getElementById('lucroPar');
-  const margemRealEl = document.getElementById('margemReal');
-  const faturamentoCaixaEl = document.getElementById('faturamentoCaixa');
-  const lucroCaixaEl = document.getElementById('lucroCaixa');
-  const custoCaixaEl = document.getElementById('custoCaixa');
+    <script>
+    /*
+     * LÍDER FRONTEND & QA/TESTER: Lógica da aplicação em JavaScript puro.
+     * Código organizado, comentado e validado para funcionar offline e sem dependências.
+    */
+    document.addEventListener('DOMContentLoaded', () => {
 
-  let roundMode = '90'; // default ",90"
+        // --- Seleção de Elementos do DOM ---
+        const costPerPairInput = document.getElementById('cost-per-pair');
+        const extraCostsInput = document.getElementById('extra-costs');
+        const marginPercentageInput = document.getElementById('margin-percentage');
+        // LÍDER FRONTEND: Elementos de arredondamento removidos
+        
+        const suggestedPriceEl = document.getElementById('suggested-price');
+        const profitPerPairEl = document.getElementById('profit-per-pair');
+        const realMarginEl = document.getElementById('real-margin');
+        const boxRevenueEl = document.getElementById('box-revenue');
+        const boxProfitEl = document.getElementById('box-profit');
+        // LÍDER FRONTEND: Elemento de preço bruto removido
 
-  function formatBRL(v){
-    return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  }
-  function roundPsychological(price){
-    if(roundMode==='none') return price;
-    const floor = Math.floor(price);
-    if(roundMode==='99'){ return floor + 0.99; }
-    // default ,90
-    return floor + 0.90;
-  }
+        const marginChips = document.querySelectorAll('.chip');
+        const shortcutButtons = document.querySelectorAll('.shortcut-btn');
+        
+        const infoToggleButton = document.getElementById('info-toggle-btn');
+        const infoContent = document.getElementById('info-content');
 
-  function calc(){
-    const custo = parseFloat(custoEl.value || 0);
-    const extras = parseFloat(extrasEl.value || 0);
-    const margem = parseFloat(margemEl.value || 0); // %
-    const custoTotal = custo + extras;
+        // --- Funções Utilitárias ---
 
-    const semArr = custoTotal * (1 + margem/100);
-    const precoArred = roundPsychological(semArr);
-    const lucro = precoArred - custoTotal;
-    const margemReal = custoTotal > 0 ? (lucro / custoTotal) * 100 : 0;
+        /**
+         * Formata um número para o padrão de moeda BRL (R$).
+         * @param {number} value - O número a ser formatado.
+         * @returns {string} - A string formatada.
+         */
+        const formatBRL = (value) => {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        };
 
-    precoVendaEl.textContent = formatBRL(precoArred);
-    precoSemArredondarEl.textContent = "Sem arredondamento: " + formatBRL(semArr);
-    lucroParEl.textContent = formatBRL(lucro);
-    margemRealEl.textContent = "Margem real: " + margemReal.toFixed(1) + "%";
+        // LÍDER FRONTEND: Função de arredondamento psicológico removida.
 
-    const faturamentoCaixa = precoArred * 10;
-    const lucroCaixa = lucro * 10;
-    const custoCaixa = custoTotal * 10;
+        // --- Lógica Principal de Cálculo ---
 
-    faturamentoCaixaEl.textContent = formatBRL(faturamentoCaixa);
-    lucroCaixaEl.textContent = formatBRL(lucroCaixa);
-    custoCaixaEl.textContent = "Custo total por caixa: " + formatBRL(custoCaixa);
-  }
+        /**
+         * QA/TESTER: Função central que recalcula todos os valores.
+         * Valida entradas para garantir que números negativos ou vazios sejam tratados como 0.
+         */
+        const calculate = () => {
+            // 1. Obter valores dos inputs
+            const costPerPair = parseFloat(costPerPairInput.value) || 0;
+            const extraCosts = parseFloat(extraCostsInput.value) || 0;
+            const marginPercentage = parseFloat(marginPercentageInput.value) || 0;
+            
+            // 2. Realizar os cálculos
+            const baseCost = costPerPair + extraCosts;
+            const suggestedPrice = baseCost * (1 + marginPercentage / 100);
+            
+            const profitPerPair = suggestedPrice - baseCost;
+            // Evita divisão por zero se o custo base for 0
+            const realMargin = baseCost > 0 ? (profitPerPair / baseCost) * 100 : 0;
+            
+            const boxRevenue = suggestedPrice * 10;
+            const boxProfit = profitPerPair * 10;
+            
+            // 3. Atualizar a UI com os resultados formatados
+            suggestedPriceEl.textContent = formatBRL(suggestedPrice);
+            profitPerPairEl.textContent = formatBRL(profitPerPair);
+            realMarginEl.textContent = `${realMargin.toFixed(2)}%`.replace('.', ',');
+            boxRevenueEl.textContent = formatBRL(boxRevenue);
+            boxProfitEl.textContent = formatBRL(boxProfit);
+        };
+        
+        /**
+         * Calcula os resultados com base em um preço final fixo (atalhos).
+         * @param {number} finalPrice - O preço de venda alvo.
+         */
+        const calculateFromShortcut = (finalPrice) => {
+            const costPerPair = parseFloat(costPerPairInput.value) || 0;
+            const extraCosts = parseFloat(extraCostsInput.value) || 0;
+            
+            const baseCost = costPerPair + extraCosts;
+            
+            const profitPerPair = finalPrice - baseCost;
+            const realMargin = baseCost > 0 ? (profitPerPair / baseCost) * 100 : 0;
+            const boxRevenue = finalPrice * 10;
+            const boxProfit = profitPerPair * 10;
 
-  // chips de margem
-  document.querySelectorAll('.chip[data-margin]').forEach(ch=>{
-    ch.addEventListener('click',()=>{
-      margemEl.value = parseFloat(ch.dataset.margin);
-      document.querySelectorAll('.chip[data-margin]').forEach(x=>x.classList.remove('primary'));
-      ch.classList.add('primary');
-      calc();
+            // Atualiza a UI, incluindo o campo de margem para refletir o cálculo
+            marginPercentageInput.value = realMargin.toFixed(2);
+            suggestedPriceEl.textContent = formatBRL(finalPrice);
+            profitPerPairEl.textContent = formatBRL(profitPerPair);
+            realMarginEl.textContent = `${realMargin.toFixed(2)}%`.replace('.', ',');
+            boxRevenueEl.textContent = formatBRL(boxRevenue);
+            boxProfitEl.textContent = formatBRL(boxProfit);
+        };
+
+
+        // --- Event Listeners ---
+
+        // Recalcular em qualquer alteração nos campos principais
+        [costPerPairInput, extraCostsInput, marginPercentageInput].forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // LÍDER FRONTEND: Listener de eventos para os botões de rádio removido.
+
+        // Funcionalidade dos chips de margem
+        marginChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                marginPercentageInput.value = chip.dataset.margin;
+                calculate();
+            });
+        });
+        
+        // Funcionalidade dos botões de atalho
+        shortcutButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const price = parseFloat(button.dataset.price);
+                calculateFromShortcut(price);
+            });
+        });
+
+        // Funcionalidade do toggle do bloco informativo em mobile
+        infoToggleButton.addEventListener('click', () => {
+            const isOpen = infoContent.classList.toggle('open');
+            // TECH WRITER: Altera o texto do botão para indicar a ação
+            infoToggleButton.textContent = isOpen ? 'ℹ️ Fechar Informações' : 'ℹ️ Sobre a Caixa Secreta';
+        });
+
+        // --- Inicialização ---
+        // QA/TESTER: Realiza o cálculo inicial ao carregar a página com os valores padrão.
+        calculate();
     });
-  });
-
-  // Arredondamento
-  document.getElementById('roundNone').addEventListener('click',()=>{ roundMode='none'; calc(); });
-  document.getElementById('round90').addEventListener('click',()=>{ roundMode='90'; calc(); });
-  document.getElementById('round99').addEventListener('click',()=>{ roundMode='99'; calc(); });
-
-  // Atalhos rápidos
-  document.querySelectorAll('.chip[data-quick]').forEach(ch=>{
-    ch.addEventListener('click',()=>{
-      const preco = parseFloat(ch.dataset.quick);
-      const custo = parseFloat(custoEl.value || 0) + parseFloat(extrasEl.value || 0);
-      const lucro = preco - custo;
-      const margemReal = custo>0 ? (lucro / custo) * 100 : 0;
-      precoVendaEl.textContent = formatBRL(preco);
-      precoSemArredondarEl.textContent = "Sem arredondamento: —";
-      lucroParEl.textContent = formatBRL(lucro);
-      margemRealEl.textContent = "Margem real: " + margemReal.toFixed(1) + "%";
-      faturamentoCaixaEl.textContent = formatBRL(preco * 10);
-      lucroCaixaEl.textContent = formatBRL(lucro * 10);
-      custoCaixaEl.textContent = "Custo total por caixa: " + formatBRL(custo * 10);
-    });
-  });
-
-  // listeners
-  [custoEl, extrasEl, margemEl].forEach(el=>el.addEventListener('input', calc));
-
-  // start
-  calc();
-</script>
+    </script>
 </body>
 </html>
